@@ -142,7 +142,7 @@ class WeatherSkill(MycroftSkill):
 
     # Handle: what is the weather like?
     @intent_handler(IntentBuilder("CurrentWeatherIntent").require(
-        "Weather").optionally("Location").build())
+        "Weather"))
     def handle_current_weather(self, message):
         try:
             # Get a date from requests like "weather for next Tuesday"
@@ -179,6 +179,11 @@ class WeatherSkill(MycroftSkill):
             self.__api_error(e)
         except Exception as e:
             LOG.error("Error: {0}".format(e))
+
+    @intent_handler(IntentBuilder("CurrentLocationWeather").require(
+        "Weather").require("At").require("Location"))
+    def handle_current_weather_at_location(self, message):
+        self.handle_current_weather(message)
 
     # Handle: What is the weather forecast?
     @intent_handler(IntentBuilder("WeatherForecast").require(
